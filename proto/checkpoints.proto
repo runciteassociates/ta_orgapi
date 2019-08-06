@@ -1,0 +1,61 @@
+syntax = "proto3";
+package org;
+
+import "entities.proto";
+
+service Checkpoints {
+    rpc ListCheckpoints (ListCheckpointsRequest) returns (ListCheckpointsResponse) {
+    }
+    rpc GetCheckpoint (GetCheckpointRequest) returns (GetCheckpointResponse) {
+    }
+    rpc CreateCheckpoints (CreateCheckpointsRequest) returns (CreateCheckpointsResponse) {
+    }
+    rpc UpdateCheckpoints (UpdateCheckpointsRequest) returns (UpdateCheckpointsResponse) {
+    }
+    rpc DeleteCheckpoints (DeleteCheckpointsRequest) returns (DeleteCheckpointsResponse) {
+    }
+}
+
+message ListCheckpointsRequest {
+    string organization_slug = 1;
+}
+
+message ListCheckpointsResponse {
+    repeated Checkpoint checkpoints = 1;
+}
+
+message GetCheckpointRequest {
+    string organization_slug = 1;
+    uint64 checkpoint_id = 2;
+}
+
+message GetCheckpointResponse {
+    Checkpoint checkpoint = 1;
+}
+
+message CreateCheckpointsRequest {
+    string organization_slug = 1;
+    repeated Checkpoint checkpoints = 2;
+}
+
+message CreateCheckpointsResponse {
+    repeated BizOperation biz_operations = 1;
+}
+
+message UpdateCheckpointsRequest {
+    string organization_slug = 1;
+    repeated Checkpoint checkpoints = 2;
+}
+
+message UpdateCheckpointsResponse {
+    repeated BizOperation biz_operations = 1;
+}
+
+message DeleteCheckpointsRequest {
+    string organization_slug = 1;
+    repeated Checkpoint checkpoints = 2;
+}
+
+message DeleteCheckpointsResponse {
+    repeated BizOperation biz_operations = 1;
+}

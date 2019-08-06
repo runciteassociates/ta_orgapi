@@ -1,0 +1,61 @@
+syntax = "proto3";
+package org;
+
+import "entities.proto";
+
+service Users {
+    rpc ListUsers (ListUsersRequest) returns (ListUsersResponse) {
+    }
+    rpc GetUser (GetUserRequest) returns (GetUserResponse) {
+    }
+    rpc CreateUsers (CreateUsersRequest) returns (CreateUsersResponse) {
+    }
+    rpc UpdateUsers (UpdateUsersRequest) returns (UpdateUsersResponse) {
+    }
+    rpc DeleteUsers (DeleteUsersRequest) returns (DeleteUsersResponse) {
+    }
+}
+
+message ListUsersRequest {
+    string organization_slug = 1;
+}
+
+message ListUsersResponse {
+    repeated User users = 1;
+}
+
+message GetUserRequest {
+    string organization_slug = 1;
+    uint64 user_id = 2;
+}
+
+message GetUserResponse {
+    User user = 1;
+}
+
+message CreateUsersRequest {
+    string organization_slug = 1;
+    repeated User users = 2;
+}
+
+message CreateUsersResponse {
+    repeated BizOperation biz_operations = 1;
+}
+
+message UpdateUsersRequest {
+    string organization_slug = 1;
+    repeated User users = 2;
+}
+
+message UpdateUsersResponse {
+    repeated BizOperation biz_operations = 1;
+}
+
+message DeleteUsersRequest {
+    string organization_slug = 1;
+    repeated User users = 2;
+}
+
+message DeleteUsersResponse {
+    repeated BizOperation biz_operations = 1;
+}

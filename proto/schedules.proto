@@ -1,0 +1,56 @@
+syntax = "proto3";
+package org;
+
+import "entities.proto";
+
+service Schedules {
+    rpc ListSchedules (ListSchedulesRequest) returns (ListSchedulesResponse) {
+    }
+    rpc GetSchedule (GetScheduleRequest) returns (GetScheduleResponse) {
+    }
+    rpc CreateSchedules (CreateSchedulesRequest) returns (CreateSchedulesResponse) {
+    }
+    rpc UpdateSchedules (UpdateSchedulesRequest) returns (UpdateSchedulesResponse) {
+    }
+    rpc DeleteSchedules (DeleteSchedulesRequest) returns (DeleteSchedulesResponse) {
+    }
+}
+
+message ListSchedulesRequest {
+    string organization_slug = 1;
+}
+message ListSchedulesResponse {
+    repeated Schedule schedules = 1;
+}
+
+message GetScheduleRequest {
+    string organization_slug = 1;
+    uint64 schedule_id = 2;
+}
+message GetScheduleResponse {
+    Schedule schedule = 1;
+}
+
+message CreateSchedulesRequest {
+    string organization_slug = 1;
+    repeated Schedule schedules = 2;
+}
+message CreateSchedulesResponse {
+    repeated BizOperation biz_operations = 1;
+}
+
+message UpdateSchedulesRequest {
+    string organization_slug = 1;
+    repeated Schedule schedules = 2;
+}
+message UpdateSchedulesResponse {
+    repeated BizOperation biz_operations = 1;
+}
+
+message DeleteSchedulesRequest {
+    string organization_slug = 1;
+    repeated Schedule schedules = 2;
+}
+message DeleteSchedulesResponse {
+    repeated BizOperation biz_operations = 1;
+}

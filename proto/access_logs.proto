@@ -1,0 +1,22 @@
+syntax = "proto3";
+package org;
+
+import "google/protobuf/timestamp.proto";
+import "entities.proto";
+
+service AccessLogs {
+    rpc ListAccessLogs (ListAccessLogsRequest) returns (ListAccessLogsResponse) {
+    }
+}
+
+message ListAccessLogsRequest {
+    string organization_slug = 1;
+    google.protobuf.Timestamp start_date = 2;
+    google.protobuf.Timestamp end_date = 3;
+    repeated uint64 user_ids = 4;
+}
+
+message ListAccessLogsResponse {
+    repeated AccessLog access_logs = 1;
+    string csv_url = 2;
+}

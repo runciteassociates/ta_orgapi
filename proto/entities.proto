@@ -1,0 +1,325 @@
+syntax = "proto3";
+
+package org;
+import "google/protobuf/timestamp.proto";
+
+message BizOperation {
+    uint64 id = 1;
+    string uuid = 2;
+    enum Kind {
+        UNKNOWN = 0;
+        CREATE_SCHEDULE = 1;
+        UPDATE_SCHEDULE = 2;
+        DELETE_SCHEDULE = 3;
+        CREATE_USER = 4;
+        UPDATE_USER = 5;
+        DELETE_USER = 6;
+        REGENERATE_QRCODE = 7;
+        REGENERATE_PASSCODE = 8;
+        CREATE_USER_GROUP = 9;
+        UPDATE_USER_GROUP = 10;
+        DELETE_USER_GROUP = 11;
+        CHANGE_USER_GROUP_DOORS = 12;
+        CHANGE_USER_GROUP_USERS = 13;
+        CHANGE_USER_GROUP_SCHEDULES = 14;
+        UPDATE_PINCODE = 15;
+        DELETE_PINCODE = 16;
+        ASSIGN_PINCODE = 17;
+        ASSIGN_KEY_CARD = 18;
+        DELETE_KEY_CARD = 19;
+        REPLACE_DOOR_CONTROLLER = 20;
+        RECOVER_DOOR_CONTROLLER = 21;
+        ENABLE_REX = 22;
+        CLONE_USER_GROUP = 23;
+        REGENERATE_ORGANIZATION_QRCODES = 24;
+        CONTROLLER_INTEGRITY_FIX = 25;
+        RESURRECT_DOOR_CONTROLLER = 26;
+        CONFIGURE_CONTROLLERS = 27;
+        CREATE_CHECKPOINT = 28;
+        UPDATE_CHECKPOINT = 29;
+        DELETE_CHECKPOINT = 30;
+    }
+    Kind kind = 3;
+    enum Status {
+        PENDING = 0;
+        FINISHED = 1;
+        FAILED = 2;
+        PROCESSING = 3;
+        ACCEPTED = 5;
+    }
+    Status status = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    repeated Error errors = 7;
+}
+
+message Organization {
+    string slug = 1;
+    string name = 2;
+    bool maintenance = 3;
+    bool active = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+}
+
+message User {
+    uint64 id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+    google.protobuf.Timestamp valid_from = 5;
+    google.protobuf.Timestamp valid_to = 6;
+    bool enabled = 7;
+    string passcode = 8; // cannot be changed via API
+    string qrcode = 9; // cannot be changed via API
+    enum Status {
+        INITIAL = 0;
+        READY = 1;
+        CREATING = 2;
+        UPDATING = 3;
+        DELETING = 4;
+        DELETED = 5;
+    }
+    Status status = 10; // cannot be changed via API
+    enum PostLoginScreenType {
+        QR_CODE = 0;
+        PERMISSIONS = 1;
+        CREDENTIALS = 2;
+        ACTIVITY = 3;
+        SETTINGS = 4;
+        SCAN_QR = 5;
+    }
+    PostLoginScreenType post_login_screen_type = 11;
+    repeated Property properties = 12;
+    repeated Pincode pincodes = 13;
+    repeated KeyCard key_cards = 14;
+    repeated Role roles = 15; // Assumed as read-only field
+    google.protobuf.Timestamp created_at = 16;
+    google.protobuf.Timestamp updated_at = 17;
+}
+
+message Property {
+    string key = 1;
+    string value = 2;
+}
+
+message Error {
+    string key = 1;
+    string value = 2;
+}
+
+
+message Role {
+    uint64 id = 1;
+    string name = 2;
+}
+
+message Pincode {
+    uint64 id = 1;
+    enum Kind {
+        DEFAULT = 0;
+        CUSTOM = 1;
+    }
+    Kind kind = 2;
+    string label = 3;
+    string value = 4;
+    enum Status {
+        INITIAL = 0;
+        READY = 1;
+        CREATING = 2;
+        UPDATING = 3;
+        DELETING = 4;
+        DELETED = 5;
+    }
+    Status status = 5; // cannot be changed via API
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}
+
+message KeyCard {
+    uint64 id = 1;
+    string nr = 2;
+    string value = 3;
+    string label = 4;
+    enum Status {
+        INITIAL = 0;
+        READY = 1;
+        CREATING = 2;
+        UPDATING = 3;
+        DELETING = 4;
+        DELETED = 5;
+    }
+    Status status = 5; // cannot be changed via API
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}
+
+message Schedule {
+    uint64 id = 1;
+    bool default = 2;
+    string name = 3;
+    string description = 4;
+    string slug = 5;
+    string schedule_definition = 6;
+    string exception_definition = 7;
+    enum Status {
+        INITIAL = 0;
+        READY = 1;
+        CREATING = 2;
+        UPDATING = 3;
+        DELETING = 4;
+        DELETED = 5;
+    }
+    Status status = 8; // cannot be changed via API
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp updated_at = 10;
+}
+
+message SecurityDevice {
+    uint64 id = 1;
+    uint64 parent_id = 2;
+    string name = 3;
+    string description = 4;
+    enum Kind {
+        SITE = 0;
+        SECTION = 1;
+        DOOR_CONTROLLER = 2;
+        DOOR = 3;
+        UNKNOWN = 4;
+    }
+    Kind kind = 5;
+    double latitude = 6;
+    double longitude = 7;
+    uint32 max_radius = 8;
+    bool remote_access_enabled = 9;
+    string timezone = 10;
+    google.protobuf.Timestamp created_at = 11;
+    google.protobuf.Timestamp updated_at = 12;
+    bool online = 13; // Only for door controllers
+    string entry_qrcode = 14; // Only for doors
+    string exit_qrcode = 15; // Only for doors
+}
+
+message SecurityCamera {
+    uint64 id = 1;
+    string controller_login = 2;
+    string controller_password = 3;
+    string controller_url = 4;
+    string controller_token = 5;
+    bool enable_distance_check = 6;
+    bool enable_insecure_qr = 7;
+    string id_point_token = 8;
+    string mac_address = 9;
+    string name = 10;
+    uint32 qr_timelimit_seconds = 11;
+    string passcode = 12;
+    string door_token = 13;
+    double controller_latitude = 14;
+    double controller_longitude = 15;
+    uint32 controller_max_distance_meters = 16;
+    string serial_number = 17;
+    google.protobuf.Timestamp created_at = 18;
+    google.protobuf.Timestamp updated_at = 19;
+    SecurityDevice door_device = 20;
+}
+
+message UserGroup {
+    uint64 id = 1;
+    string name = 2;
+    bool enabled = 3;
+    google.protobuf.Timestamp valid_from = 4;
+    google.protobuf.Timestamp valid_to = 5;
+    enum AuthType {
+        REX = 0; // Door open button
+        CARD = 1; // Show QR
+        PIN = 2; // PIN
+        CARD_PLUS_PIN = 3; // Show QR, enter pin on keypad
+        SCAN = 4; // Scan QR on the door
+        SCAN_PLUS_KEYPAD = 5; // Scan QR on the door, enter pin on keypad
+        SCAN_PLUS_PHONE = 6; // Scan QR on the door, enter pin on phone's virtual keypad
+        KEY_CARD = 7; // NFC Card
+        REMOTE = 8; // Open door remotely
+        REMOTE_PLUS_PHONE = 9; // Open door remotely after entering pin on phone's virtual keypad
+        CARD_PLUS_PHONE = 10; // Show QR, enter pin on phone's virtual keypad
+        PASSCODE = 11;
+        KEY_CARD_PLUS_PIN = 12; // NFC Card, enter pin on keypad
+    }
+    AuthType entry_auth_type = 6;
+    AuthType exit_auth_type = 7;
+    enum Status {
+        INITIAL = 0;
+        READY = 1;
+        CREATING = 2;
+        UPDATING = 3;
+        DELETING = 4;
+        DELETED = 5;
+    }
+    Status status = 8; // cannot be changed via API
+    repeated Property properties = 9;
+    google.protobuf.Timestamp created_at = 10;
+    google.protobuf.Timestamp updated_at = 11;
+    repeated SecurityDevice security_devices = 12;
+    repeated User users = 13;
+    repeated Schedule schedules = 14;
+}
+
+message AccessLog {
+    uint64 id = 1;
+    enum AccessDescription {
+        ACCESS_GRANTED = 0;
+        ACCESS_DENIED = 1;
+    }
+    AccessDescription access_description = 2;
+    google.protobuf.Timestamp time = 3;
+    uint64 section_id = 4;
+    uint64 site_id = 5;
+    uint64 security_device_id = 6;
+    uint64 user_id = 7;
+    Pincode pincode = 8;
+    enum Direction {
+        IN = 0;
+        OUT = 1;
+        UNDEFINED = 2;
+    }
+    Direction direction = 9;
+    string user_email = 10;
+    string user_name = 11;
+}
+
+message IndoorSession {
+    uint64 id = 1;
+    google.protobuf.Timestamp start_time = 2;
+    google.protobuf.Timestamp end_time = 3;
+    enum Kind {
+        SECURITY_DEVICE = 0;
+        CHECKPOINT = 1;
+    }
+    Kind kind = 4;
+    bool is_tailgated = 5;
+    SecurityDevice security_device = 6;
+    Checkpoint checkpoint = 7;
+    User user = 8;
+}
+
+message UserGroupSet {
+    uint64 id = 1;
+    string name = 2;
+    string description = 3;
+    repeated UserGroup user_groups = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+}
+
+message Checkpoint {
+    uint64 id = 1;
+    string name = 2;
+    string description = 3;
+    enum Status {
+        ACTIVE = 0;
+        DELETED = 1;
+    }
+    Status status = 4; // cannot be changed via API
+    repeated uint64 security_device_ids = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}

@@ -1,0 +1,110 @@
+syntax = "proto3";
+package org;
+
+import "entities.proto";
+
+service UserGroups {
+    rpc ListGroups (ListGroupsRequest) returns (ListGroupsResponse) {
+    }
+    rpc GetGroup (GetGroupRequest) returns (GetGroupResponse) {
+    }
+    rpc CreateGroups (CreateGroupsRequest) returns (CreateGroupsResponse) {
+    }
+    rpc UpdateGroups (UpdateGroupsRequest) returns (UpdateGroupsResponse) {
+    }
+    rpc DeleteGroups (DeleteGroupsRequest) returns (DeleteGroupsResponse) {
+    }
+
+    rpc ChangeUsersOfGroups (ChangeUsersOfGroupsRequest) returns (ChangeUsersOfGroupsResponse) {
+    }
+    rpc ChangeDoorsOfGroups (ChangeDoorsOfGroupsRequest) returns (ChangeDoorsOfGroupsResponse) {
+    }
+    rpc ChangeSchedulesOfGroups (ChangeSchedulesOfGroupsRequest) returns (ChangeSchedulesOfGroupsResponse) {
+    }
+}
+
+message GroupUsersSet {
+    UserGroup user_group = 1;
+    repeated uint64 user_ids = 2;
+}
+
+message GroupDoorsSet {
+    UserGroup user_group = 1;
+    repeated uint64 door_ids = 2; // IDs of security devices with kind "door" to assign
+}
+
+message GroupSchedulesSet {
+    UserGroup user_group = 1;
+    repeated uint64 schedule_ids = 2;
+}
+
+message ListGroupsRequest {
+    string organization_slug = 1;
+}
+
+message ListGroupsResponse {
+    repeated UserGroup user_groups = 1;
+}
+
+message GetGroupRequest {
+    string organization_slug = 1;
+    uint64 user_group_id = 2;
+}
+
+message GetGroupResponse {
+    UserGroup user_group = 1;
+}
+
+message CreateGroupsRequest {
+    string organization_slug = 1;
+    repeated UserGroup user_groups = 2;
+}
+
+message CreateGroupsResponse {
+    repeated BizOperation biz_operations = 1;
+}
+
+message UpdateGroupsRequest {
+    string organization_slug = 1;
+    repeated UserGroup user_groups = 2;
+}
+
+message UpdateGroupsResponse {
+    repeated BizOperation biz_operations = 1;
+}
+
+message DeleteGroupsRequest {
+    string organization_slug = 1;
+    repeated UserGroup user_groups = 2;
+}
+
+message DeleteGroupsResponse {
+    repeated BizOperation biz_operations = 1;
+}
+
+message ChangeUsersOfGroupsRequest {
+    string organization_slug = 1;
+    repeated GroupUsersSet group_users_sets = 2;
+}
+
+message ChangeUsersOfGroupsResponse {
+    repeated BizOperation biz_operations = 1;
+}
+
+message ChangeDoorsOfGroupsRequest {
+    string organization_slug = 1;
+    repeated GroupDoorsSet group_doors_sets = 2;
+}
+
+message ChangeDoorsOfGroupsResponse {
+    repeated BizOperation biz_operations = 1;
+}
+
+message ChangeSchedulesOfGroupsRequest {
+    string organization_slug = 1;
+    repeated GroupSchedulesSet group_schedules_sets = 2;
+}
+
+message ChangeSchedulesOfGroupsResponse {
+    repeated BizOperation biz_operations = 1;
+}

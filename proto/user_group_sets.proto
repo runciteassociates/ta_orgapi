@@ -1,0 +1,58 @@
+syntax = "proto3";
+package org;
+
+import "google/protobuf/empty.proto";
+import "entities.proto";
+
+service UserGroupSets {
+    rpc ListGroupSets (ListGroupSetsRequest) returns (ListGroupSetsResponse) {
+    }
+    rpc GetGroupSet (GetGroupSetRequest) returns (GetGroupSetResponse) {
+    }
+    rpc CreateGroupSets (CreateGroupSetsRequest) returns (CreateGroupSetsResponse) {
+    }
+    rpc UpdateGroupSets (UpdateGroupSetsRequest) returns (UpdateGroupSetsResponse) {
+    }
+    rpc DeleteGroupSets (DeleteGroupSetsRequest) returns (google.protobuf.Empty) {
+    }
+}
+
+message ListGroupSetsRequest {
+    string organization_slug = 1;
+}
+
+message ListGroupSetsResponse {
+    repeated UserGroupSet user_group_sets = 1;
+}
+
+message GetGroupSetRequest {
+    string organization_slug = 1;
+    uint64 user_group_set_id = 2;
+}
+
+message GetGroupSetResponse {
+    UserGroupSet user_group_set = 1;
+}
+
+message CreateGroupSetsRequest {
+    string organization_slug = 1;
+    repeated UserGroupSet user_group_sets = 2;
+}
+
+message CreateGroupSetsResponse {
+    repeated UserGroupSet user_group_sets = 1;
+}
+
+message UpdateGroupSetsRequest {
+    string organization_slug = 1;
+    repeated UserGroupSet user_group_sets = 2;
+}
+
+message UpdateGroupSetsResponse {
+    repeated UserGroupSet user_group_sets = 1;
+}
+
+message DeleteGroupSetsRequest {
+    string organization_slug = 1;
+    repeated UserGroupSet user_group_sets = 2;
+}

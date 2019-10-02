@@ -51,6 +51,7 @@ message BizOperation {
     google.protobuf.Timestamp created_at = 5;
     google.protobuf.Timestamp updated_at = 6;
     repeated Error errors = 7;
+    string payload = 8;
 }
 
 message Organization {

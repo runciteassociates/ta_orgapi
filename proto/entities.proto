@@ -138,20 +138,6 @@ message Pincode {
     google.protobuf.Timestamp created_at = 6;
     google.protobuf.Timestamp updated_at = 7;
     string uuid = 8;
-    repeated PincodeMapping pincode_mappings = 9; // cannot be changed via API
-}
-
-// Internally used entity. Read-only
-message PincodeMapping {
-    uint64 id = 1;
-    string uuid = 2;
-    uint64 pincode_id = 3;
-    uint64 security_device_id = 4;
-    uint64 user_group_id = 5;
-    google.protobuf.Timestamp created_at = 6;
-    google.protobuf.Timestamp updated_at = 7;
-    string security_device_uuid = 8;
-    string user_group_uuid = 9;
 }
 
 message KeyCard {
@@ -171,20 +157,6 @@ message KeyCard {
     google.protobuf.Timestamp created_at = 6;
     google.protobuf.Timestamp updated_at = 7;
     string uuid = 8;
-    repeated KeyCardMapping key_card_mappings = 9; // cannot be changed via API
-}
-
-// Internally used entity. Read-only
-message KeyCardMapping {
-    uint64 id = 1;
-    string uuid = 2;
-    uint64 key_card_id = 3;
-    uint64 security_device_id = 4;
-    uint64 user_group_id = 5;
-    google.protobuf.Timestamp created_at = 6;
-    google.protobuf.Timestamp updated_at = 7;
-    string security_device_uuid = 8;
-    string user_group_uuid = 9;
 }
 
 message Schedule {

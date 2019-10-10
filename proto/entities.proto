@@ -138,9 +138,10 @@ message Pincode {
     google.protobuf.Timestamp created_at = 6;
     google.protobuf.Timestamp updated_at = 7;
     string uuid = 8;
-    repeated PincodeMapping pincode_mappings = 9;
+    repeated PincodeMapping pincode_mappings = 9; // cannot be changed via API
 }
 
+// Internally used entity. Read-only
 message PincodeMapping {
     uint64 id = 1;
     string uuid = 2;
@@ -170,9 +171,10 @@ message KeyCard {
     google.protobuf.Timestamp created_at = 6;
     google.protobuf.Timestamp updated_at = 7;
     string uuid = 8;
-    repeated KeyCardMapping key_card_mappings = 9;
+    repeated KeyCardMapping key_card_mappings = 9; // cannot be changed via API
 }
 
+// Internally used entity. Read-only
 message KeyCardMapping {
     uint64 id = 1;
     string uuid = 2;

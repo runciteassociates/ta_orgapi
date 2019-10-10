@@ -38,6 +38,7 @@ message BizOperation {
         CREATE_CHECKPOINT = 28;
         UPDATE_CHECKPOINT = 29;
         DELETE_CHECKPOINT = 30;
+        REGISTER_KEY_CARD = 31;
     }
     Kind kind = 3;
     enum Status {
@@ -97,6 +98,7 @@ message User {
     repeated Role roles = 15; // Assumed as read-only field
     google.protobuf.Timestamp created_at = 16;
     google.protobuf.Timestamp updated_at = 17;
+    string uuid = 18;
 }
 
 message Property {
@@ -135,6 +137,20 @@ message Pincode {
     Status status = 5; // cannot be changed via API
     google.protobuf.Timestamp created_at = 6;
     google.protobuf.Timestamp updated_at = 7;
+    string uuid = 8;
+    repeated PincodeMapping pincode_mappings = 9;
+}
+
+message PincodeMapping {
+    uint64 id = 1;
+    string uuid = 2;
+    uint64 pincode_id = 3;
+    uint64 security_device_id = 4;
+    uint64 user_group_id = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+    string security_device_uuid = 8;
+    string user_group_uuid = 9;
 }
 
 message KeyCard {
@@ -153,6 +169,20 @@ message KeyCard {
     Status status = 5; // cannot be changed via API
     google.protobuf.Timestamp created_at = 6;
     google.protobuf.Timestamp updated_at = 7;
+    string uuid = 8;
+    repeated KeyCardMapping key_card_mappings = 9;
+}
+
+message KeyCardMapping {
+    uint64 id = 1;
+    string uuid = 2;
+    uint64 key_card_id = 3;
+    uint64 security_device_id = 4;
+    uint64 user_group_id = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+    string security_device_uuid = 8;
+    string user_group_uuid = 9;
 }
 
 message Schedule {
@@ -174,6 +204,7 @@ message Schedule {
     Status status = 8; // cannot be changed via API
     google.protobuf.Timestamp created_at = 9;
     google.protobuf.Timestamp updated_at = 10;
+    string uuid = 11;
 }
 
 message Preferences {
@@ -205,6 +236,7 @@ message SecurityDevice {
     string entry_qrcode = 14; // Only for doors
     string exit_qrcode = 15; // Only for doors
     repeated Preferences preferences = 16;
+    string uuid = 17;
 }
 
 message SecurityCamera {
@@ -228,6 +260,7 @@ message SecurityCamera {
     google.protobuf.Timestamp created_at = 18;
     google.protobuf.Timestamp updated_at = 19;
     SecurityDevice door_device = 20;
+    string uuid = 21;
 }
 
 message UserGroup {
@@ -268,6 +301,7 @@ message UserGroup {
     repeated SecurityDevice security_devices = 12;
     repeated User users = 13;
     repeated Schedule schedules = 14;
+    string uuid = 15;
 }
 
 message AccessLog {
@@ -291,6 +325,12 @@ message AccessLog {
     Direction direction = 9;
     string user_email = 10;
     string user_name = 11;
+    string uuid = 12;
+    string security_device_uuid = 13;
+    string user_uuid = 14;
+    string pincode_uuid = 15;
+    string reason = 16;
+    string auth_type = 17;
 }
 
 message IndoorSession {
@@ -306,6 +346,7 @@ message IndoorSession {
     SecurityDevice security_device = 6;
     Checkpoint checkpoint = 7;
     User user = 8;
+    string uuid = 9;
 }
 
 message UserGroupSet {
@@ -315,6 +356,7 @@ message UserGroupSet {
     repeated UserGroup user_groups = 4;
     google.protobuf.Timestamp created_at = 5;
     google.protobuf.Timestamp updated_at = 6;
+    string uuid = 7;
 }
 
 message Checkpoint {
@@ -329,4 +371,5 @@ message Checkpoint {
     repeated uint64 security_device_ids = 5;
     google.protobuf.Timestamp created_at = 6;
     google.protobuf.Timestamp updated_at = 7;
+    string uuid = 8;
 }

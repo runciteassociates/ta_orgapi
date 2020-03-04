@@ -1,12 +1,16 @@
 syntax = "proto3";
-package org;
 
-import "entities.proto";
+package entryfy.org.api.v1;
+import "entryfy/org/api/v1/entities.proto";
 
-service Schedules {
-    rpc ListSchedules (ListSchedulesRequest) returns (ListSchedulesResponse) {
-    }
-    rpc GetSchedule (GetScheduleRequest) returns (GetScheduleResponse) {
+//option go_package = "github.com/entryfy/org/api/v1;org-api";
+option java_multiple_files = true;
+option java_package = "com.entryfy.org.api.v1";
+option csharp_namespace = "Entryfy.Org.Api.V1";
+option ruby_package = "Entryfy::Org::Api::V1";
+
+service SchedulesService {
+    rpc GetSchedules (GetSchedulesRequest) returns (GetSchedulesResponse) {
     }
     rpc CreateSchedules (CreateSchedulesRequest) returns (CreateSchedulesResponse) {
     }
@@ -16,19 +20,12 @@ service Schedules {
     }
 }
 
-message ListSchedulesRequest {
+message GetSchedulesRequest {
     string organization_slug = 1;
+    repeated string uuids = 2;
 }
-message ListSchedulesResponse {
+message GetSchedulesResponse {
     repeated Schedule schedules = 1;
-}
-
-message GetScheduleRequest {
-    string organization_slug = 1;
-    uint64 schedule_id = 2;
-}
-message GetScheduleResponse {
-    Schedule schedule = 1;
 }
 
 message CreateSchedulesRequest {
@@ -49,7 +46,7 @@ message UpdateSchedulesResponse {
 
 message DeleteSchedulesRequest {
     string organization_slug = 1;
-    repeated Schedule schedules = 2;
+    repeated string uuids = 2;
 }
 message DeleteSchedulesResponse {
     repeated BizOperation biz_operations = 1;

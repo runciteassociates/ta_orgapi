@@ -1,0 +1,430 @@
+syntax = "proto3";
+
+package entryfy.org.api.v1;
+import "google/protobuf/timestamp.proto";
+
+//option go_package = "github.com/entryfy/org/api/v1;org-api";
+option java_multiple_files = true;
+option java_package = "com.entryfy.org.api.v1";
+option csharp_namespace = "Entryfy.Org.Api.V1";
+option ruby_package = "Entryfy::Org::Api::V1";
+
+message BizOperation {
+    uint64 id = 1; // Obsolete, use UUID instead
+    string uuid = 2;
+    enum Kind {
+        KIND_UNSPECIFIED = 0;
+        KIND_CREATE_SCHEDULE = 1;
+        KIND_UPDATE_SCHEDULE = 2;
+        KIND_DELETE_SCHEDULE = 3;
+        KIND_CREATE_USER = 4;
+        KIND_UPDATE_USER = 5;
+        KIND_DELETE_USER = 6;
+        KIND_REGENERATE_QRCODE = 7;
+        KIND_REGENERATE_PASSCODE = 8;
+        KIND_CREATE_USER_GROUP = 9;
+        KIND_UPDATE_USER_GROUP = 10;
+        KIND_DELETE_USER_GROUP = 11;
+        KIND_CHANGE_USER_GROUP_DOORS = 12;
+        KIND_CHANGE_USER_GROUP_USERS = 13;
+        KIND_CHANGE_USER_GROUP_SCHEDULES = 14;
+        KIND_UPDATE_PINCODE = 15;
+        KIND_DELETE_PINCODE = 16;
+        KIND_ASSIGN_PINCODE = 17;
+        KIND_ASSIGN_KEY_CARD = 18;
+        KIND_DELETE_KEY_CARD = 19;
+        KIND_REPLACE_DOOR_CONTROLLER = 20;
+        KIND_RECOVER_DOOR_CONTROLLER = 21;
+        KIND_ENABLE_REX = 22;
+        KIND_CLONE_USER_GROUP = 23;
+        KIND_REGENERATE_ORGANIZATION_QRCODES = 24;
+        KIND_CONTROLLER_INTEGRITY_FIX = 25;
+        KIND_RESURRECT_DOOR_CONTROLLER = 26;
+        KIND_CONFIGURE_CONTROLLERS = 27;
+        KIND_CREATE_CHECKPOINT = 28;
+        KIND_UPDATE_CHECKPOINT = 29;
+        KIND_DELETE_CHECKPOINT = 30;
+        KIND_REGISTER_KEY_CARD = 31;
+        KIND_UPDATE_SETTINGS = 32;
+        KIND_CREATE_TEMPORARY_ACCESS = 33;
+        KIND_UPDATE_TEMPORARY_ACCESS = 34;
+        KIND_DELETE_TEMPORARY_ACCESS = 35;
+    }
+    Kind kind = 3;
+    enum Status {
+        STATUS_UNSPECIFIED = 0;
+        STATUS_PENDING = 1;
+        STATUS_FINISHED = 2;
+        STATUS_FAILED = 3;
+        STATUS_PROCESSING = 4;
+        STATUS_ACCEPTED = 5;
+    }
+    Status status = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    map<string, string> errors = 7;
+    string payload = 8;
+}
+
+// Organization settings
+message Settings {
+    repeated string default_auth_types_for_temp_access = 1;
+}
+
+message Organization {
+    string slug = 1;
+    string name = 2;
+    bool maintenance = 3;
+    bool active = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    Settings settings = 7;
+}
+
+message User {
+    uint64 id = 1; // Obsolete, use UUID instead
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+    google.protobuf.Timestamp valid_from = 5;
+    google.protobuf.Timestamp valid_to = 6;
+    bool enabled = 7;
+    string passcode = 8; // cannot be changed via API
+    string qrcode = 9; // cannot be changed via API
+    enum Status {
+        STATUS_UNSPECIFIED = 0;
+        STATUS_INITIAL = 1;
+        STATUS_READY = 2;
+        STATUS_CREATING = 3;
+        STATUS_UPDATING = 4;
+        STATUS_DELETING = 5;
+        STATUS_DELETED = 6;
+    }
+    Status status = 10; // cannot be changed via API
+    enum PostLoginScreenType {
+        POST_LOGIN_SCREEN_TYPE_UNSPECIFIED = 0;
+        POST_LOGIN_SCREEN_TYPE_QR_CODE = 1;
+        POST_LOGIN_SCREEN_TYPE_PERMISSIONS = 2;
+        POST_LOGIN_SCREEN_TYPE_CREDENTIALS = 3;
+        POST_LOGIN_SCREEN_TYPE_ACTIVITY = 4;
+        POST_LOGIN_SCREEN_TYPE_SETTINGS = 5;
+        POST_LOGIN_SCREEN_TYPE_SCAN_QR = 6;
+    }
+    PostLoginScreenType post_login_screen_type = 11;
+    map<string, string> preferences = 12;
+    repeated Pincode pincodes = 13;
+    repeated KeyCard key_cards = 14;
+    repeated string roles = 15; // [orgadmin, operator, guest, normal] only
+    google.protobuf.Timestamp created_at = 16;
+    google.protobuf.Timestamp updated_at = 17;
+    string uuid = 18;
+}
+
+message Pincode {
+    uint64 id = 1; // Obsolete, use UUID instead
+    enum Kind {
+        KIND_UNSPECIFIED = 0;
+        KIND_DEFAULT = 1;
+        KIND_CUSTOM = 2;
+    }
+    Kind kind = 2;
+    string label = 3;
+    string value = 4;
+    enum Status {
+        STATUS_UNSPECIFIED = 0;
+        STATUS_INITIAL = 1;
+        STATUS_READY = 2;
+        STATUS_CREATING = 3;
+        STATUS_UPDATING = 4;
+        STATUS_DELETING = 5;
+        STATUS_DELETED = 6;
+    }
+    Status status = 5; // cannot be changed via API
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+    string uuid = 8;
+    repeated PincodeMapping pincode_mappings = 9;
+}
+
+message PincodeMapping {
+    uint64 id = 1; // Obsolete, use UUID instead
+    string uuid = 2;
+    uint64 pincode_id = 3;
+    uint64 security_device_id = 4;
+    uint64 user_group_id = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+    string security_device_uuid = 8;
+    string user_group_uuid = 9;
+}
+
+message KeyCard {
+    uint64 id = 1; // Obsolete, use UUID instead
+    string nr = 2;
+    string value = 3;
+    string label = 4;
+    enum Status {
+        STATUS_UNSPECIFIED = 0;
+        STATUS_INITIAL = 1;
+        STATUS_READY = 2;
+        STATUS_CREATING = 3;
+        STATUS_UPDATING = 4;
+        STATUS_DELETING = 5;
+        STATUS_DELETED = 6;
+    }
+    Status status = 5; // cannot be changed via API
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+    string uuid = 8;
+    repeated KeyCardMapping key_card_mappings = 9;
+}
+
+message KeyCardMapping {
+    uint64 id = 1; // Obsolete, use UUID instead
+    string uuid = 2;
+    uint64 key_card_id = 3;
+    uint64 security_device_id = 4;
+    uint64 user_group_id = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+    string security_device_uuid = 8;
+    string user_group_uuid = 9;
+}
+
+message Schedule {
+    uint64 id = 1; // Obsolete, use UUID instead
+    bool default = 2;
+    string name = 3;
+    string description = 4;
+    string slug = 5;
+    string schedule_definition = 6;
+    string exception_definition = 7;
+    enum Status {
+        STATUS_UNSPECIFIED = 0;
+        STATUS_INITIAL = 1;
+        STATUS_READY = 2;
+        STATUS_CREATING = 3;
+        STATUS_UPDATING = 4;
+        STATUS_DELETING = 5;
+        STATUS_DELETED = 6;
+    }
+    Status status = 8; // cannot be changed via API
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp updated_at = 10;
+    string uuid = 11;
+    map<string, string> preferences = 12;
+}
+
+message SecurityDevice {
+    uint64 id = 1; // Obsolete, use UUID instead
+    uint64 parent_id = 2;
+    string name = 3;
+    string description = 4;
+    enum Kind {
+        KIND_UNSPECIFIED = 0;
+        KIND_SITE = 1;
+        KIND_SECTION = 2;
+        KIND_DOOR_CONTROLLER = 3;
+        KIND_DOOR = 4;
+        KIND_UNKNOWN = 5;
+    }
+    Kind kind = 5;
+    double latitude = 6;
+    double longitude = 7;
+    uint32 max_radius = 8;
+    bool remote_access_enabled = 9;
+    string timezone = 10;
+    google.protobuf.Timestamp created_at = 11;
+    google.protobuf.Timestamp updated_at = 12;
+    bool online = 13; // Only for door controllers
+    string entry_qrcode = 14; // Only for doors
+    string exit_qrcode = 15; // Only for doors
+    map<string, string> preferences = 16;
+    string uuid = 17;
+    string parent_uuid = 18;
+}
+
+message SecurityCamera {
+    uint64 id = 1; // Obsolete, use UUID instead
+    string controller_login = 2;
+    string controller_password = 3;
+    string controller_url = 4;
+    string controller_token = 5;
+    bool enable_distance_check = 6;
+    bool enable_insecure_qr = 7;
+    string id_point_token = 8;
+    string mac_address = 9;
+    string name = 10;
+    uint32 qr_timelimit_seconds = 11;
+    string passcode = 12;
+    string door_token = 13;
+    double controller_latitude = 14;
+    double controller_longitude = 15;
+    uint32 controller_max_distance_meters = 16;
+    string serial_number = 17;
+    google.protobuf.Timestamp created_at = 18;
+    google.protobuf.Timestamp updated_at = 19;
+    SecurityDevice door_device = 20;
+    string uuid = 21;
+}
+
+message UserGroup {
+    uint64 id = 1; // Obsolete, use UUID instead
+    string name = 2;
+    bool enabled = 3;
+    google.protobuf.Timestamp valid_from = 4;
+    google.protobuf.Timestamp valid_to = 5;
+    enum AuthType {
+        AUTH_TYPE_UNSPECIFIED = 0;
+        AUTH_TYPE_REX = 1; // Door open button
+        AUTH_TYPE_CARD = 2; // Show QR
+        AUTH_TYPE_PIN = 3; // PIN
+        AUTH_TYPE_CARD_PLUS_PIN = 4; // Show QR, enter pin on keypad
+        AUTH_TYPE_SCAN = 5; // Scan QR on the door
+        AUTH_TYPE_SCAN_PLUS_KEYPAD = 6; // Scan QR on the door, enter pin on keypad
+        AUTH_TYPE_SCAN_PLUS_PHONE = 7; // Scan QR on the door, enter pin on phone's virtual keypad
+        AUTH_TYPE_KEY_CARD = 8; // NFC Card
+        AUTH_TYPE_REMOTE = 9; // Open door remotely
+        AUTH_TYPE_REMOTE_PLUS_PHONE = 10; // Open door remotely after entering pin on phone's virtual keypad
+        AUTH_TYPE_CARD_PLUS_PHONE = 11; // Show QR, enter pin on phone's virtual keypad
+        AUTH_TYPE_PASSCODE = 12;
+        AUTH_TYPE_KEY_CARD_PLUS_PIN = 13; // NFC Card, enter pin on keypad
+    }
+    AuthType entry_auth_type = 6;
+    AuthType exit_auth_type = 7;
+    enum Status {
+        STATUS_UNSPECIFIED = 0;
+        STATUS_INITIAL = 1;
+        STATUS_READY = 2;
+        STATUS_CREATING = 3;
+        STATUS_UPDATING = 4;
+        STATUS_DELETING = 5;
+        STATUS_DELETED = 6;
+    }
+    Status status = 8; // cannot be changed via API
+    map<string, string> preferences = 9;
+    google.protobuf.Timestamp created_at = 10;
+    google.protobuf.Timestamp updated_at = 11;
+    repeated SecurityDevice security_devices = 12;
+    repeated User users = 13;
+    repeated Schedule schedules = 14;
+    string uuid = 15;
+}
+
+message AccessLog {
+    uint64 id = 1; // Obsolete, use UUID instead
+    enum AccessDescription {
+        ACCESS_DESCRIPTION_UNSPECIFIED = 0;
+        ACCESS_DESCRIPTION_ACCESS_GRANTED = 1;
+        ACCESS_DESCRIPTION_ACCESS_DENIED = 2;
+    }
+    AccessDescription access_description = 2;
+    google.protobuf.Timestamp time = 3;
+    uint64 section_id = 4;
+    uint64 site_id = 5;
+    uint64 security_device_id = 6;
+    uint64 user_id = 7;
+    Pincode pincode = 8;
+    enum Direction {
+        DIRECTION_UNSPECIFIED = 0;
+        DIRECTION_IN = 1;
+        DIRECTION_OUT = 2;
+        DIRECTION_UNDEFINED = 3;
+    }
+    Direction direction = 9;
+    string user_email = 10;
+    string user_name = 11;
+    string uuid = 12;
+    string security_device_uuid = 13;
+    string user_uuid = 14;
+    string pincode_uuid = 15;
+    string reason = 16;
+    string auth_type = 17;
+    string pincode_value = 18;
+}
+
+message IndoorSession {
+    uint64 id = 1; // Obsolete, use UUID instead
+    google.protobuf.Timestamp start_time = 2;
+    google.protobuf.Timestamp end_time = 3;
+    enum Kind {
+        KIND_UNSPECIFIED = 0;
+        KIND_SECURITY_DEVICE = 1;
+        KIND_CHECKPOINT = 2;
+    }
+    Kind kind = 4;
+    bool is_tailgated = 5;
+    SecurityDevice security_device = 6;
+    Checkpoint checkpoint = 7;
+    User user = 8;
+    string uuid = 9;
+}
+
+message UserGroupSet {
+    uint64 id = 1; // Obsolete, use UUID instead
+    string name = 2;
+    string description = 3;
+    repeated UserGroup user_groups = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    string uuid = 7;
+    map<string, string> preferences = 8;
+}
+
+message Checkpoint {
+    uint64 id = 1; // Obsolete, use UUID instead
+    string name = 2;
+    string description = 3;
+    enum Status {
+        STATUS_UNSPECIFIED = 0;
+        STATUS_ACTIVE = 1;
+        STATUS_DELETED = 2;
+    }
+    Status status = 4; // cannot be changed via API
+    repeated uint64 security_device_ids = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+    string uuid = 8;
+}
+
+message TemporaryAccess {
+    string uuid = 1;
+    string name = 2;
+    enum Status {
+        STATUS_UNSPECIFIED = 0;
+        STATUS_INITIAL = 1;
+        STATUS_READY = 2;
+        STATUS_CREATING = 3;
+        STATUS_UPDATING = 4;
+        STATUS_DELETING = 5;
+        STATUS_DELETED = 6;
+    }
+    Status status = 3;
+    map<string, string> preferences = 4;
+    google.protobuf.Timestamp valid_from = 5;
+    google.protobuf.Timestamp valid_to = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+    Schedule schedule = 9;
+    repeated TemporaryAccessDoor doors = 10;
+    repeated TemporaryAccessUser users = 11;
+}
+
+message TemporaryAccessDoor {
+    string uuid = 1;
+    string temporary_access_uuid = 2;
+    string security_device_uuid = 3;
+    bool lock_unlock_enabled = 4;
+    repeated string in_auth_types = 5;
+    repeated string out_auth_types = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+}
+
+message TemporaryAccessUser {
+    string uuid = 1;
+    string temporary_access_uuid = 2;
+    string user_uuid = 3;
+    google.protobuf.Timestamp created_at = 4;
+    google.protobuf.Timestamp updated_at = 5;
+}

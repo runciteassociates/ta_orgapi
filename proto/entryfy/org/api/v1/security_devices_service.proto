@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package entryfy.org.api.v1;
+import "entryfy/org/api/v1/entities.proto";
+
+//option go_package = "github.com/entryfy/org/api/v1;org-api";
+option java_multiple_files = true;
+option java_package = "com.entryfy.org.api.v1";
+option csharp_namespace = "Entryfy.Org.Api.V1";
+option ruby_package = "Entryfy::Org::Api::V1";
+
+
+service SecurityDevicesService {
+    rpc GetSecurityDevices (GetSecurityDevicesRequest) returns (GetSecurityDevicesResponse) {
+    }
+    rpc RemoteOpen (RemoteOpenRequest) returns (RemoteOpenResponse) {
+    }
+}
+
+message GetSecurityDevicesRequest {
+    string organization_slug = 1;
+    repeated string uuids = 2;
+}
+
+message GetSecurityDevicesResponse {
+    repeated SecurityDevice security_devices = 1;
+}
+
+message RemoteOpenRequest {
+    string organization_slug = 1;
+    string uuid = 2; // Security device UUID
+    string pin = 3; // User pin code, non-mandatory
+    double latitude = 4; // User geo latitude if distance check is enabled
+    double longitude = 5; // User geo longitude if distance check is enabled
+}
+
+message RemoteOpenResponse {
+}

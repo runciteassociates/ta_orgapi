@@ -1,12 +1,16 @@
 syntax = "proto3";
-package org;
 
-import "entities.proto";
+package entryfy.org.api.v1;
+import "entryfy/org/api/v1/entities.proto";
 
-service Checkpoints {
-    rpc ListCheckpoints (ListCheckpointsRequest) returns (ListCheckpointsResponse) {
-    }
-    rpc GetCheckpoint (GetCheckpointRequest) returns (GetCheckpointResponse) {
+//option go_package = "github.com/entryfy/org/api/v1;org-api";
+option java_multiple_files = true;
+option java_package = "com.entryfy.org.api.v1";
+option csharp_namespace = "Entryfy.Org.Api.V1";
+option ruby_package = "Entryfy::Org::Api::V1";
+
+service CheckpointsService {
+    rpc GetCheckpoints (GetCheckpointsRequest) returns (GetCheckpointsResponse) {
     }
     rpc CreateCheckpoints (CreateCheckpointsRequest) returns (CreateCheckpointsResponse) {
     }
@@ -16,21 +20,13 @@ service Checkpoints {
     }
 }
 
-message ListCheckpointsRequest {
+message GetCheckpointsRequest {
     string organization_slug = 1;
+    repeated string uuids = 2; // All checkpoints returned if UUIDs not set
 }
 
-message ListCheckpointsResponse {
+message GetCheckpointsResponse {
     repeated Checkpoint checkpoints = 1;
-}
-
-message GetCheckpointRequest {
-    string organization_slug = 1;
-    uint64 checkpoint_id = 2;
-}
-
-message GetCheckpointResponse {
-    Checkpoint checkpoint = 1;
 }
 
 message CreateCheckpointsRequest {
@@ -53,7 +49,7 @@ message UpdateCheckpointsResponse {
 
 message DeleteCheckpointsRequest {
     string organization_slug = 1;
-    repeated Checkpoint checkpoints = 2;
+    repeated string uuids = 2;
 }
 
 message DeleteCheckpointsResponse {

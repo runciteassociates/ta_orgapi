@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package entryfy.account.api.v1;
+
+//option go_package = "github.com/entryfy/account/api/v1;account-api";
+option java_multiple_files = true;
+option java_package = "com.entryfy.account.api.v1";
+option csharp_namespace = "Entryfy.Account.Api.V1";
+option ruby_package = "Entryfy::Account::Api::V1";
+
+service SessionsService {
+    rpc CreateSession (CreateSessionRequest) returns (CreateSessionResponse) {
+    }
+    rpc ReissueSession (ReissueSessionRequest) returns (ReissueSessionResponse) {
+    }
+    rpc DestroySession (DestroySessionRequest) returns (DestroySessionResponse) {
+    }
+}
+
+message CreateSessionRequest {
+    string username = 1;
+    string password = 2;
+    string device_uuid = 3;
+}
+
+message ReissueSessionRequest {
+    string reissue_token = 1;
+}
+
+message CreateSessionResponse {
+    string auth_token = 1;
+    string reissue_token = 2;
+    uint32 exp = 3;
+    uint64 user_id = 4;
+    string username = 5;
+    string user_uuid = 6;
+}
+
+message ReissueSessionResponse {
+    string auth_token = 1;
+    string reissue_token = 2;
+    uint32 exp = 3;
+    uint64 user_id = 4;
+    string username = 5;
+    string user_uuid = 6;
+}
+
+message DestroySessionRequest {
+
+}
+
+message DestroySessionResponse {
+
+}

@@ -1,12 +1,16 @@
 syntax = "proto3";
-package org;
 
-import "entities.proto";
+package entryfy.org.api.v1;
+import "entryfy/org/api/v1/entities.proto";
 
-service Users {
-    rpc ListUsers (ListUsersRequest) returns (ListUsersResponse) {
-    }
-    rpc GetUser (GetUserRequest) returns (GetUserResponse) {
+//option go_package = "github.com/entryfy/org/api/v1;org-api";
+option java_multiple_files = true;
+option java_package = "com.entryfy.org.api.v1";
+option csharp_namespace = "Entryfy.Org.Api.V1";
+option ruby_package = "Entryfy::Org::Api::V1";
+
+service UsersService {
+    rpc GetUsers (GetUsersRequest) returns (GetUsersResponse) {
     }
     rpc CreateUsers (CreateUsersRequest) returns (CreateUsersResponse) {
     }
@@ -16,21 +20,13 @@ service Users {
     }
 }
 
-message ListUsersRequest {
+message GetUsersRequest {
     string organization_slug = 1;
+    repeated string uuids = 2; // Send an empty array to fetch all users
 }
 
-message ListUsersResponse {
+message GetUsersResponse {
     repeated User users = 1;
-}
-
-message GetUserRequest {
-    string organization_slug = 1;
-    uint64 user_id = 2;
-}
-
-message GetUserResponse {
-    User user = 1;
 }
 
 message CreateUsersRequest {
@@ -53,7 +49,7 @@ message UpdateUsersResponse {
 
 message DeleteUsersRequest {
     string organization_slug = 1;
-    repeated User users = 2;
+    repeated string uuids = 2;
 }
 
 message DeleteUsersResponse {

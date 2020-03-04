@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package entryfy.org.api.v1;
+import "entryfy/org/api/v1/entities.proto";
+
+//option go_package = "github.com/entryfy/org/api/v1;org-api";
+option java_multiple_files = true;
+option java_package = "com.entryfy.org.api.v1";
+option csharp_namespace = "Entryfy.Org.Api.V1";
+option ruby_package = "Entryfy::Org::Api::V1";
+
+service SecurityCamerasService {
+    rpc GetSecurityCameras (GetSecurityCamerasRequest) returns (GetSecurityCamerasResponse) {
+    }
+}
+
+message GetSecurityCamerasRequest {
+    string organization_slug = 1;
+    repeated string uuids = 2;
+}
+
+message GetSecurityCamerasResponse {
+    repeated SecurityCamera security_cameras = 1;
+}

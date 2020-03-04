@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package entryfy.org.api.v1;
+import "google/protobuf/timestamp.proto";
+import "entryfy/org/api/v1/entities.proto";
+
+//option go_package = "github.com/entryfy/org/api/v1;org-api";
+option java_multiple_files = true;
+option java_package = "com.entryfy.org.api.v1";
+option csharp_namespace = "Entryfy.Org.Api.V1";
+option ruby_package = "Entryfy::Org::Api::V1";
+
+
+service IndoorSessionsService {
+    rpc GetIndoorSessions (GetIndoorSessionsRequest) returns (GetIndoorSessionsResponse) {
+    }
+}
+
+message GetIndoorSessionsRequest {
+    string organization_slug = 1;
+    google.protobuf.Timestamp start_date = 2;
+    google.protobuf.Timestamp end_date = 3;
+    repeated string user_uuids = 4;
+    repeated string checkpoint_uuids = 5;
+    bool is_tailgated = 6;
+
+    enum Order {
+        ORDER_UNSPECIFIED = 0;
+        ORDER_ASC = 1;
+        ORDER_DESC = 2;
+    }
+    Order order = 7;
+}
+
+message GetIndoorSessionsResponse {
+    repeated IndoorSession indoor_sessions = 1;
+    string csv_url = 2;
+}

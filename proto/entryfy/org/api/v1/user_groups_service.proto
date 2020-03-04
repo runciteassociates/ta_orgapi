@@ -1,12 +1,16 @@
 syntax = "proto3";
-package org;
 
-import "entities.proto";
+package entryfy.org.api.v1;
+import "entryfy/org/api/v1/entities.proto";
 
-service UserGroups {
-    rpc ListGroups (ListGroupsRequest) returns (ListGroupsResponse) {
-    }
-    rpc GetGroup (GetGroupRequest) returns (GetGroupResponse) {
+//option go_package = "github.com/entryfy/org/api/v1;org-api";
+option java_multiple_files = true;
+option java_package = "com.entryfy.org.api.v1";
+option csharp_namespace = "Entryfy.Org.Api.V1";
+option ruby_package = "Entryfy::Org::Api::V1";
+
+service UserGroupsService {
+    rpc GetGroups (GetGroupsRequest) returns (GetGroupsResponse) {
     }
     rpc CreateGroups (CreateGroupsRequest) returns (CreateGroupsResponse) {
     }
@@ -24,35 +28,27 @@ service UserGroups {
 }
 
 message GroupUsersSet {
-    UserGroup user_group = 1;
-    repeated uint64 user_ids = 2;
+    string uuid = 1; // User group UUID
+    repeated string user_uuids = 2; // UUIDs of users to assign
 }
 
 message GroupDoorsSet {
-    UserGroup user_group = 1;
-    repeated uint64 door_ids = 2; // IDs of security devices with kind "door" to assign
+    string uuid = 1; // User group UUID
+    repeated string door_uuids = 2; // UUIDs of security devices with kind "door" to assign
 }
 
 message GroupSchedulesSet {
-    UserGroup user_group = 1;
-    repeated uint64 schedule_ids = 2;
+    string uuid = 1; // User group UUID
+    repeated string schedule_uuids = 2; // UUIDs of schedules to assign
 }
 
-message ListGroupsRequest {
+message GetGroupsRequest {
     string organization_slug = 1;
+    repeated string uuids = 2; // UUIDs of groups to fetch. Fetches all if not specified
 }
 
-message ListGroupsResponse {
+message GetGroupsResponse {
     repeated UserGroup user_groups = 1;
-}
-
-message GetGroupRequest {
-    string organization_slug = 1;
-    uint64 user_group_id = 2;
-}
-
-message GetGroupResponse {
-    UserGroup user_group = 1;
 }
 
 message CreateGroupsRequest {
@@ -75,7 +71,7 @@ message UpdateGroupsResponse {
 
 message DeleteGroupsRequest {
     string organization_slug = 1;
-    repeated UserGroup user_groups = 2;
+    repeated string uuids = 2;
 }
 
 message DeleteGroupsResponse {

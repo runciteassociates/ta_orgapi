@@ -1,37 +1,32 @@
 syntax = "proto3";
-package org;
 
-import "google/protobuf/empty.proto";
-import "entities.proto";
+package entryfy.org.api.v1;
+import "entryfy/org/api/v1/entities.proto";
 
-service UserGroupSets {
-    rpc ListGroupSets (ListGroupSetsRequest) returns (ListGroupSetsResponse) {
-    }
-    rpc GetGroupSet (GetGroupSetRequest) returns (GetGroupSetResponse) {
+//option go_package = "github.com/entryfy/org/api/v1;org-api";
+option java_multiple_files = true;
+option java_package = "com.entryfy.org.api.v1";
+option csharp_namespace = "Entryfy.Org.Api.V1";
+option ruby_package = "Entryfy::Org::Api::V1";
+
+service UserGroupSetsService {
+    rpc GetGroupSets (GetGroupSetsRequest) returns (GetGroupSetsResponse) {
     }
     rpc CreateGroupSets (CreateGroupSetsRequest) returns (CreateGroupSetsResponse) {
     }
     rpc UpdateGroupSets (UpdateGroupSetsRequest) returns (UpdateGroupSetsResponse) {
     }
-    rpc DeleteGroupSets (DeleteGroupSetsRequest) returns (google.protobuf.Empty) {
+    rpc DeleteGroupSets (DeleteGroupSetsRequest) returns (DeleteGroupSetsResponse) {
     }
 }
 
-message ListGroupSetsRequest {
+message GetGroupSetsRequest {
     string organization_slug = 1;
+    repeated string uuids = 2;
 }
 
-message ListGroupSetsResponse {
+message GetGroupSetsResponse {
     repeated UserGroupSet user_group_sets = 1;
-}
-
-message GetGroupSetRequest {
-    string organization_slug = 1;
-    uint64 user_group_set_id = 2;
-}
-
-message GetGroupSetResponse {
-    UserGroupSet user_group_set = 1;
 }
 
 message CreateGroupSetsRequest {
@@ -54,5 +49,8 @@ message UpdateGroupSetsResponse {
 
 message DeleteGroupSetsRequest {
     string organization_slug = 1;
-    repeated UserGroupSet user_group_sets = 2;
+    repeated string uuids = 2;
+}
+
+message DeleteGroupSetsResponse {
 }

@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package entryfy.org.api.v1;
+import "entryfy/org/api/v1/entities.proto";
+
+//option go_package = "github.com/entryfy/org/api/v1;org-api";
+option java_multiple_files = true;
+option java_package = "com.entryfy.org.api.v1";
+option csharp_namespace = "Entryfy.Org.Api.V1";
+option ruby_package = "Entryfy::Org::Api::V1";
+
+// Organizations service and requests/responses
+service OrganizationsService {
+    rpc GetOrganizations (GetOrganizationsRequest) returns (GetOrganizationsResponse) {
+    }
+    rpc GetSettings (GetSettingsRequest) returns (GetSettingsResponse) {
+    }
+    rpc UpdateSettings (UpdateSettingsRequest) returns (UpdateSettingsResponse) {
+    }
+}
+
+message GetOrganizationsRequest {
+}
+
+message GetOrganizationsResponse {
+    repeated Organization organizations = 1;
+}
+
+message GetSettingsRequest {
+    string organization_slug = 1;
+}
+message GetSettingsResponse {
+    Settings settings = 1;
+}
+
+message UpdateSettingsRequest {
+    string organization_slug = 1;
+    Settings settings = 2;
+}
+message UpdateSettingsResponse {
+    BizOperation biz_operation = 1;
+}
